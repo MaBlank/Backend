@@ -1,6 +1,4 @@
 package com.example.backendfachpraktikumrefactored;
-
-import com.example.backendfachpraktikumrefactored.DTO.ListDTO;
 import com.example.backendfachpraktikumrefactored.Model.Document;
 import com.example.backendfachpraktikumrefactored.ConverterFunctions.Converter;
 import lombok.AllArgsConstructor;
@@ -9,7 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.UUID;
 import org.springframework.web.multipart.MultipartFile;
 import javax.xml.bind.JAXBException;
 
@@ -44,18 +42,18 @@ public class DocumentService {
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
     }
-    public Optional<Document> findDocument(String id) {
-        return annotationRepository.findById(id);
+    public Optional<Document> findDocumentAsJSON(UUID guid) {
+        return annotationRepository.findByGuid(guid);
     }
-    public String findDocumentAsXml(String id) throws JAXBException {
-        Optional<Document> document = annotationRepository.findById(id);
+    public String findDocumentAsXml(UUID guid) throws JAXBException {
+        Optional<Document> document = annotationRepository.findByGuid(guid);
         if (document.isPresent()) {
             return Converter.convertDocumentToXml(document.get());
         }
         return null;
     }
-    public String findDocumentAsCoNLL2003(String id) {
-        Optional<Document> document = annotationRepository.findById(id);
+    public String findDocumentAsCoNLL2003(UUID guid) {
+        Optional<Document> document = annotationRepository.findByGuid(guid);
         if (document.isPresent()) {
             return Converter.convertDocumentToCoNLL2003(document.get());
         }
@@ -64,10 +62,7 @@ public class DocumentService {
     public void saveDocument(Document document) {
         annotationRepository.save(document);
     }
-    public List<ListDTO> getAllDocuments() {
-        List<Document> documents = annotationRepository.findAll();
-        return documents.stream()
-                .map(doc -> new ListDTO(doc.getGuid(), doc.getText()))
-                .collect(Collectors.toList());
+    public List<Document> getAllDocuments() {
+        return annotationRepository.findAll();
     }
 }

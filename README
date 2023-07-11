@@ -1,0 +1,6 @@
+1. Schritt
+   Docker-Compose-yaml MongoDB starten
+2. Schritt
+   mvn clean install
+3. Schritt
+   app starten

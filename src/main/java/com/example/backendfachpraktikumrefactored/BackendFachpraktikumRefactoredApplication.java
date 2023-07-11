@@ -8,5 +8,4 @@ public class BackendFachpraktikumRefactoredApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(BackendFachpraktikumRefactoredApplication.class, args);
 	}
-
 }

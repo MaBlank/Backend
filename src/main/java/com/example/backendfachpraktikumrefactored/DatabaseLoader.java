@@ -19,9 +19,9 @@ public class DatabaseLoader implements CommandLineRunner {
     }
     @Override
     public void run(String... strings) {
-        String text = "Am 1. August sind wir in den Urlaub nach Barcelona, Spanien, gefahren. Unser Flug startete um 11:00 Uhr morgens. Wir hatten eine aufregende Reise vor uns und waren voller Vorfreude auf all die Abenteuer, die uns erwarten sollten.Als wir am Flughafen ankamen, war die Atmosphäre lebhaft und voller Aufregung. Menschen unterschiedlicher Nationalitäten eilten durch die Terminals, und das Summen der Gespräche und das Klappern der Rollkoffer erfüllten die Luft. Nachdem wir eingecheckt und unsere Bordkarten erhalten hatten, begaben wir uns zur Sicherheitskontrolle. Das Aufgeben unseres Gepäcks verlief reibungslos, und bald darauf waren wir bereit, das Flugzeug zu besteigen.";
+        String text = "Im August sind wir in den Urlaub nach Barcelona, Spanien, gefahren. Unser Flug startete um 11 Uhr morgens. Wir hatten eine aufregende Reise vor uns und waren voller Vorfreude auf all die Abenteuer, die uns erwarten sollten.Als wir am Flughafen ankamen, war die Atmosphäre lebhaft und voller Aufregung. Menschen unterschiedlicher Nationalitäten eilten durch die Terminals, und das Summen der Gespräche und das Klappern der Rollkoffer erfüllten die Luft. Nachdem wir eingecheckt und unsere Bordkarten erhalten hatten, begaben wir uns zur Sicherheitskontrolle. Das Aufgeben unseres Gepäcks verlief reibungslos, und bald darauf waren wir bereit, das Flugzeug zu besteigen.";
         List<Annotation> annotations = new ArrayList<>();
-        annotations.add(new Annotation(3, 11, "Date", "#0d6efd"));
+        annotations.add(new Annotation(4, 9, "Date", "#0d6efd"));
         annotations.add(new Annotation(36, 45, "City", "#dc3545"));
         annotations.add(new Annotation(47, 52, "Country", "#198754"));
         annotations.add(new Annotation(77, 85, "Time", "#6c757d"));

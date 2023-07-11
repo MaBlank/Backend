@@ -1,6 +1,4 @@
 package com.example.backendfachpraktikumrefactored;
-
-import com.example.backendfachpraktikumrefactored.DTO.ListDTO;
 import com.example.backendfachpraktikumrefactored.Model.Document;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -15,7 +13,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/documents")
+@RequestMapping("/api")
 @AllArgsConstructor
 public class Controller {
     private final DocumentService documentService;
@@ -62,7 +60,7 @@ public class Controller {
     @GetMapping("/documents/{id}")
     public ResponseEntity<?> getDocument(@PathVariable String id) {
         try {
-            Optional<Document> document = documentService.findDocument(id);
+            Optional<Document> document = documentService.findDocumentAsJSON(UUID.fromString(id));
             if (document.isPresent()) {
                 return new ResponseEntity<>(document.get(), HttpStatus.OK);
             } else {
@@ -75,7 +73,7 @@ public class Controller {
     @GetMapping(value = "/xml/{id}", produces = MediaType.APPLICATION_XML_VALUE)
     public ResponseEntity<?> getXml(@PathVariable String id) {
         try {
-            String xml = documentService.findDocumentAsXml(id);
+            String xml = documentService.findDocumentAsXml(UUID.fromString(id));
             if (xml != null) {
                 return new ResponseEntity<>(xml, HttpStatus.OK);
             } else {
@@ -88,7 +86,7 @@ public class Controller {
     @GetMapping(value = "/conll2003/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<?> getCoNLL2003(@PathVariable String id) {
         try {
-            String conll2003 = documentService.findDocumentAsCoNLL2003(id);
+            String conll2003 = documentService.findDocumentAsCoNLL2003(UUID.fromString(id));
             if (conll2003 != null) {
                 return new ResponseEntity<>(conll2003, HttpStatus.OK);
             } else {
@@ -101,9 +99,9 @@ public class Controller {
     @PutMapping(value = "/update/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> updateDocument(@PathVariable String id, @RequestBody Document newDocument) {
         try {
-            Optional<Document> document = documentService.findDocument(id);
+            Optional<Document> document = documentService.findDocumentAsJSON(UUID.fromString(id));
             if (document.isPresent()) {
-                newDocument.setGuid(UUID.fromString(id)); // make sure the ID is set correctly
+                newDocument.setGuid(UUID.fromString(id));
                 documentService.saveDocument(newDocument);
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
@@ -114,9 +112,9 @@ public class Controller {
         }
     }
     @GetMapping("/projects")
-    public ResponseEntity<List<ListDTO>> getAllDocuments() {
+    public ResponseEntity<List<Document>> getAllDocuments() {
         try {
-            List<ListDTO> allDocumentIds = documentService.getAllDocuments();
+            List<Document> allDocumentIds = documentService.getAllDocuments();
             if (!allDocumentIds.isEmpty()) {
                 return new ResponseEntity<>(allDocumentIds, HttpStatus.OK);
             } else {
