@@ -1,4 +1,5 @@
 package com.example.backendfachpraktikumrefactored;
+import com.example.backendfachpraktikumrefactored.Helper.TextObject;
 import com.example.backendfachpraktikumrefactored.Model.Document;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,42 +15,45 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class Controller {
     private final DocumentService documentService;
     @PostMapping("/uploadDocx")
-    public ResponseEntity<?> uploadDocx(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity uploadDocx(String name, @RequestParam("file") MultipartFile file) {
         try {
-            Document savedDocuments = documentService.uploadDocx(file);
+            Document savedDocuments = documentService.uploadDocx(name,file);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
         } catch (IOException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PostMapping("/uploadTxt")
-    public ResponseEntity uploadTxt(@RequestBody String txt) {
-        return new ResponseEntity<>(documentService.uploadTxt(txt), HttpStatus.OK);
+    public ResponseEntity<String> uploadTxt(@RequestParam("name") String name,
+                                            @RequestBody TextObject textObject) {
+        String result = String.valueOf(documentService.uploadTxt(name, textObject.getTxt()));
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping("/uploadXml")
-    public ResponseEntity<?> uploadXml(@RequestBody String xml) {
+    public ResponseEntity uploadXml(String name, @RequestBody String xml) {
         try {
-            Document savedDocuments = documentService.uploadXml(xml);
+            Document savedDocuments = documentService.uploadXml(name, xml);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
         } catch (JAXBException e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PostMapping("/uploadCoNLL2003")
-    public ResponseEntity<?> uploadCoNLL2003(@RequestBody String conll2003) {
+    public ResponseEntity uploadCoNLL2003(String name, @RequestBody String conll2003) {
         try {
-            Document savedDocuments = documentService.uploadCoNLL2003(conll2003);
+            Document savedDocuments = documentService.uploadCoNLL2003(name, conll2003);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @PostMapping("/uploadJson")
-    public ResponseEntity<?> uploadJson(@RequestBody Document documents) {
+    public ResponseEntity uploadJson(@RequestBody Document documents) {
         try {
             Document savedDocuments = documentService.uploadJson(documents);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
