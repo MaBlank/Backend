@@ -1,5 +1,4 @@
 package com.example.backendfachpraktikumrefactored.ConverterFunctions;
-
 import com.example.backendfachpraktikumrefactored.Model.Annotation;
 import com.example.backendfachpraktikumrefactored.Model.Annotations;
 import com.example.backendfachpraktikumrefactored.Model.Document;
@@ -59,6 +58,7 @@ class ConverterTest {
         String expectedText = "This is the expected text in the docx file. This is the expected text in the docx file2.";
         Document result = Converter.convertDocxToDocument(filePath);
         assertEquals(expectedText, result.getText());
+        System.out.println(result.getText());
         assertTrue(result.getAnnotations().getAnnotations().isEmpty());
     }
     @Test

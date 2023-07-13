@@ -36,6 +36,9 @@ public class DocumentService {
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
     }
+    public void deleteAllDocuments() {
+        annotationRepository.deleteAll();
+    }
     public Document uploadTxt(String name, String txt) {
         Document documents = Converter.convertTxtToDocuments(txt);
         documents.setName(name);

@@ -29,9 +29,8 @@ public class Controller {
         }
     }
     @PostMapping("/uploadTxt")
-    public ResponseEntity<String> uploadTxt(@RequestParam("name") String name,
-                                            @RequestBody TextObject textObject) {
-        String result = String.valueOf(documentService.uploadTxt(name, textObject.getTxt()));
+    public ResponseEntity<String> uploadTxt(@RequestParam("name") String name, @RequestBody String text) {
+        String result = String.valueOf(documentService.uploadTxt(name, text));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping("/uploadXml")
@@ -48,6 +47,15 @@ public class Controller {
         try {
             Document savedDocuments = documentService.uploadCoNLL2003(name, conll2003);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/deleteAllDocuments")
+    public ResponseEntity<Void> deleteAllDocuments() {
+        try {
+            documentService.deleteAllDocuments();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
