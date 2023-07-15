@@ -39,6 +39,7 @@ public class DocumentService {
     public void deleteAllDocuments() {
         annotationRepository.deleteAll();
     }
+
     public Document uploadTxt(String name, String txt) {
         Document documents = Converter.convertTxtToDocuments(txt);
         documents.setName(name);
@@ -48,6 +49,9 @@ public class DocumentService {
     public Document uploadJson(Document documents) {
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
+    }
+    public void deleteDocument(UUID guid) {
+        annotationRepository.deleteByGuid(guid);
     }
     public Optional<Document> findDocumentAsJSON(UUID guid) {
         return annotationRepository.findByGuid(guid);

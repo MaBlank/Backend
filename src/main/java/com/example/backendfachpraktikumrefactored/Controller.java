@@ -76,10 +76,10 @@ public class Controller {
             if (document.isPresent()) {
                 return new ResponseEntity<>(document.get(), HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>("Document not found", HttpStatus.NOT_FOUND);
             }
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping(value = "/xml/{id}", produces = MediaType.APPLICATION_XML_VALUE)
@@ -113,6 +113,7 @@ public class Controller {
         try {
             Optional<Document> document = documentService.findDocumentAsJSON(UUID.fromString(id));
             if (document.isPresent()) {
+                documentService.deleteDocument(UUID.fromString(id));
                 newDocument.setGuid(UUID.fromString(id));
                 documentService.saveDocument(newDocument);
                 return new ResponseEntity<>(HttpStatus.OK);
