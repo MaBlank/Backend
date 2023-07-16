@@ -27,12 +27,20 @@ public class DocumentService {
     public Document uploadXml(String name, String xml) throws JAXBException {
         Document documents = Converter.convertXmlToDocument(xml);
         documents.setName(name);
+        Optional<Document> document = annotationRepository.findByGuid(documents.getGuid());
+        if (document.isPresent()) {
+            annotationRepository.deleteByGuid(documents.getGuid());
+        }
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
     }
     public Document uploadCoNLL2003(String name, String conll2003) {
         Document documents = Converter.convertCoNLL2003ToDocument(conll2003);
         documents.setName(name);
+        Optional<Document> document = annotationRepository.findByGuid(documents.getGuid());
+        if (document.isPresent()) {
+            annotationRepository.deleteByGuid(documents.getGuid());
+        }
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
     }
@@ -47,6 +55,10 @@ public class DocumentService {
         return savedDocuments;
     }
     public Document uploadJson(Document documents) {
+        Optional<Document> document = annotationRepository.findByGuid(documents.getGuid());
+        if (document.isPresent()) {
+            annotationRepository.deleteByGuid(documents.getGuid());
+        }
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
     }

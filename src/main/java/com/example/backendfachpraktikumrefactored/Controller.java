@@ -1,5 +1,4 @@
 package com.example.backendfachpraktikumrefactored;
-import com.example.backendfachpraktikumrefactored.Helper.TextObject;
 import com.example.backendfachpraktikumrefactored.Model.Document;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
