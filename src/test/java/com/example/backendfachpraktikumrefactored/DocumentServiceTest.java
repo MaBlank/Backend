@@ -14,7 +14,6 @@ import java.util.UUID;
 
 @ExtendWith(MockitoExtension.class)
 public class DocumentServiceTest {
-
     @Mock
     AnnotationRepository annotationRepository;
     @InjectMocks
@@ -27,7 +26,6 @@ public class DocumentServiceTest {
         assertTrue(result.isPresent());
         assertEquals(document, result.get());
     }
-
     @Test
     public void findDocumentAsJSONNotFoundTest() {
         when(annotationRepository.findByGuid(any(UUID.class))).thenReturn(Optional.empty());
