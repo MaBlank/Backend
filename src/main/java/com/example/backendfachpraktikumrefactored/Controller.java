@@ -23,7 +23,7 @@ import java.util.UUID;
 public class Controller {
     private final DocumentService documentService;
     @PostMapping("/uploadDocx")
-    public ResponseEntity uploadDocx(String name, @RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadDocx(String name, @RequestParam("file") MultipartFile file) {
         try {
             Document savedDocuments = documentService.uploadDocx(name,file);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
@@ -37,7 +37,7 @@ public class Controller {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
     @PostMapping("/uploadXml")
-    public ResponseEntity uploadXml(String name, @RequestBody String xml) {
+    public ResponseEntity<?> uploadXml(String name, @RequestBody String xml) {
         try {
             Document savedDocuments = documentService.uploadXml(name, xml);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
@@ -46,7 +46,7 @@ public class Controller {
         }
     }
     @PostMapping("/uploadCoNLL2003")
-    public ResponseEntity uploadCoNLL2003(String name, @RequestBody String conll2003) {
+    public ResponseEntity<?> uploadCoNLL2003(String name, @RequestBody String conll2003) {
         try {
             Document savedDocuments = documentService.uploadCoNLL2003(name, conll2003);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
@@ -64,7 +64,7 @@ public class Controller {
         }
     }
     @PostMapping("/uploadJson")
-    public ResponseEntity uploadJson(@RequestBody Document documents) {
+    public ResponseEntity<?> uploadJson(@RequestBody Document documents) {
         try {
             Document savedDocuments = documentService.uploadJson(documents);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
@@ -103,7 +103,6 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping(value = "/conll2003/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<?> getCoNLL2003(@PathVariable String id) {
         try {
