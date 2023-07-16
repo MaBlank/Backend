@@ -2,6 +2,9 @@ package com.example.backendfachpraktikumrefactored;
 import com.example.backendfachpraktikumrefactored.Helper.TextObject;
 import com.example.backendfachpraktikumrefactored.Model.Document;
 import lombok.AllArgsConstructor;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -9,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -83,11 +87,16 @@ public class Controller {
         }
     }
     @GetMapping(value = "/xml/{id}", produces = MediaType.APPLICATION_XML_VALUE)
-    public ResponseEntity<?> getXml(@PathVariable String id) {
+    public ResponseEntity<Resource> getXml(@PathVariable String id) {
         try {
             String xml = documentService.findDocumentAsXml(UUID.fromString(id));
             if (xml != null) {
-                return new ResponseEntity<>(xml, HttpStatus.OK);
+                ByteArrayResource resource = new ByteArrayResource(xml.getBytes(StandardCharsets.UTF_8));
+                HttpHeaders headers = new HttpHeaders();
+                headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=export.xml");
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .body(resource);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -95,6 +104,7 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping(value = "/conll2003/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
     public ResponseEntity<?> getCoNLL2003(@PathVariable String id) {
         try {
