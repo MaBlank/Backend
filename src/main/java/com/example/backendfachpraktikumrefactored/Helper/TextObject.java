@@ -1,14 +1,10 @@
 package com.example.backendfachpraktikumrefactored.Helper;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class TextObject {
     private String txt;
-
-    // getter and setter methods
-    public String getTxt() {
-        return txt;
-    }
-
-    public void setTxt(String txt) {
-        this.txt = txt;
-    }
 }

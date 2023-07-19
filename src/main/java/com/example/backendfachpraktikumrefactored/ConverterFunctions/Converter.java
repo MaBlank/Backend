@@ -42,10 +42,9 @@ public class Converter {
         JAXBContext jaxbContext = JAXBContext.newInstance(Document.class);
         Marshaller marshaller = jaxbContext.createMarshaller();
 
-        // Set the Marshaller properties to generate pretty-formatted XML
-        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE); // To format the XML output
-        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8"); // To specify the encoding
-        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE); // To remove the XML declaration at the start of the XML
+        marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);
+        marshaller.setProperty(Marshaller.JAXB_ENCODING, "UTF-8");
+        marshaller.setProperty(Marshaller.JAXB_FRAGMENT, Boolean.TRUE);
 
         StringWriter sw = new StringWriter();
         marshaller.marshal(document, sw);
@@ -61,19 +60,19 @@ public class Converter {
         int currentIndex = 0;
 
         for (String line : lines) {
-            if (line.trim().isEmpty()) {  // new sentence
+            if (line.trim().isEmpty()) {
                 continue;
             }
             String[] parts = line.split(" ");
             if (parts.length < 2) {
-                sentence.append(parts[0]);  // Add punctuation to the sentence.
+                sentence.append(parts[0]);
                 currentIndex += parts[0].length();
-                continue;  // skip lines without a tag
+                continue;
             }
             String token = parts[0];
             String tag = parts[1];
 
-            if (sentence.length() > 0) { // add a space if not the start of the sentence
+            if (sentence.length() > 0) {
                 sentence.append(" ");
                 currentIndex += 1;
             }
@@ -93,11 +92,10 @@ public class Converter {
         int currentAnnotationIndex = 0;
 
         for (int i = 0; i < tokens.length; i++) {
-            // If token is a punctuation mark, skip label
             if (tokens[i].matches("[.,!?]")) {
                 conll2003.append(tokens[i]).append("\n");
-                if (i == tokens.length - 1) { // If it's the last token in the sentence
-                    conll2003.append("\n"); // Add an additional newline character
+                if (i == tokens.length - 1) {
+                    conll2003.append("\n");
                 }
             } else {
                 conll2003.append(tokens[i]);
@@ -111,14 +109,12 @@ public class Converter {
                 conll2003.append("\n");
             }
         }
-
-        // Return the trimmed string to remove leading and trailing whitespace
         return conll2003.toString().trim();
     }
     private static int getWordIndex(String[] tokens, int charIndex) {
         int sum = 0;
         for (int i = 0; i < tokens.length; i++) {
-            sum += tokens[i].length() + 1;  // +1 for space or punctuation
+            sum += tokens[i].length() + 1;
             if (charIndex < sum) {
                 return i;
             }

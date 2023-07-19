@@ -46,17 +46,13 @@ public class ControllerTest {
 
     @Test
     public void testUpdateDocumentWhenDocumentExists() {
-        // Arrange
+
         String id = UUID.randomUUID().toString();
-        Document newDocument = new Document(); // Assume there's a no-args constructor
+        Document newDocument = new Document();
         newDocument.setGuid(UUID.fromString(id));
-        // Configure the mock to return the existing document when `findDocumentAsJSON` is called
         when(documentService.findDocumentAsJSON(UUID.fromString(id))).thenReturn(Optional.of(new Document()));
-        // Act
         ResponseEntity<?> result = documentController.updateDocument(id, newDocument);
-        // Assert
         assertEquals(HttpStatus.OK, result.getStatusCode());
-        // Verify that the mock's `saveDocument` method was called once with the `newDocument`
         verify(documentService, times(1)).saveDocument(newDocument);
     }
 
@@ -64,15 +60,11 @@ public class ControllerTest {
     public void testUpdateDocumentWhenDocumentDoesNotExist() {
         // Arrange
         String id = UUID.randomUUID().toString();
-        Document newDocument = new Document(); // Assume there's a no-args constructor
+        Document newDocument = new Document();
         newDocument.setGuid(UUID.fromString(id));
-        // Configure the mock to return an empty Optional when `findDocumentAsJSON` is called
         when(documentService.findDocumentAsJSON(UUID.fromString(id))).thenReturn(Optional.empty());
-        // Act
         ResponseEntity<?> result = documentController.updateDocument(id, newDocument);
-        // Assert
         assertEquals(HttpStatus.NOT_FOUND, result.getStatusCode());
-        // Verify that the mock's `saveDocument` method was not called
         verify(documentService, never()).saveDocument(newDocument);
     }
 
@@ -80,15 +72,11 @@ public class ControllerTest {
     public void testUpdateDocumentWhenExceptionOccurs() {
         // Arrange
         String id = UUID.randomUUID().toString();
-        Document newDocument = new Document(); // Assume there's a no-args constructor
+        Document newDocument = new Document();
         newDocument.setGuid(UUID.fromString(id));
-        // Configure the mock to throw an exception when `findDocumentAsJSON` is called
         when(documentService.findDocumentAsJSON(UUID.fromString(id))).thenThrow(new RuntimeException());
-        // Act
         ResponseEntity<?> result = documentController.updateDocument(id, newDocument);
-        // Assert
         assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, result.getStatusCode());
-        // Verify that the mock's `saveDocument` method was not called
         verify(documentService, never()).saveDocument(newDocument);
     }
 }
