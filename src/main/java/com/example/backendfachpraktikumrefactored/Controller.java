@@ -1,5 +1,6 @@
 package com.example.backendfachpraktikumrefactored;
 import com.example.backendfachpraktikumrefactored.Model.Document;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
@@ -13,6 +14,7 @@ import javax.xml.bind.JAXBException;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -32,7 +34,17 @@ public class Controller {
         }
     }
     @PostMapping("/uploadTxt")
-    public ResponseEntity<String> uploadTxt(@RequestParam("name") String name, @RequestBody String text) {
+    public ResponseEntity<String> uploadTxt(@RequestParam("name") String name, @RequestBody String json) {
+        ObjectMapper mapper = new ObjectMapper();
+        String text = "";
+
+        try {
+            Map<String, String> map = mapper.readValue(json, Map.class);
+            text = map.get("txt");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         String result = String.valueOf(documentService.uploadTxt(name, text));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -58,6 +70,15 @@ public class Controller {
     public ResponseEntity<Void> deleteAllDocuments() {
         try {
             documentService.deleteAllDocuments();
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @DeleteMapping("/deleteDocument/{id}")
+    public ResponseEntity<Void> deleteDocument(@PathVariable String id) {
+        try {
+            documentService.deleteDocument(UUID.fromString(id));
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
