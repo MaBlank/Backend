@@ -84,6 +84,7 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    // Test
     @PostMapping("/uploadJson")
     public ResponseEntity<?> uploadJson(@RequestBody Document documents) {
         try {
