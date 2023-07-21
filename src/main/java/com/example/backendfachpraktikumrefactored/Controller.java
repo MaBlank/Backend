@@ -24,15 +24,18 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Controller {
     private final DocumentService documentService;
+
     @PostMapping("/uploadDocx")
     public ResponseEntity<?> uploadDocx(String name, @RequestParam("file") MultipartFile file) {
         try {
-            Document savedDocuments = documentService.uploadDocx(name,file);
+            Document savedDocuments = documentService.uploadDocx(name, file);
             return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
-        } catch (IOException e) {
+        } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/uploadTxt")
     public ResponseEntity<String> uploadTxt(@RequestParam("name") String name, @RequestBody String json) {
         ObjectMapper mapper = new ObjectMapper();

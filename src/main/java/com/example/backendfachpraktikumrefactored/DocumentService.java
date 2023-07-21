@@ -15,15 +15,28 @@ import javax.xml.bind.JAXBException;
 @AllArgsConstructor
 public class DocumentService {
     private final AnnotationRepository annotationRepository;
-     public Document uploadDocx(String name, MultipartFile file) throws IOException {
-        String filePath = "path/to/temp/dir/" + file.getOriginalFilename();
+    public Document uploadDocx(String name, MultipartFile file) throws IOException {
+        String rootDir = System.getProperty("user.dir");
+        String dirPath = rootDir + File.separator + "temp" + File.separator;
+        File dir = new File(dirPath);
+        if (!dir.exists()) dir.mkdirs();
+        String filePath = dirPath + file.getOriginalFilename();
         File docxFile = new File(filePath);
         file.transferTo(docxFile);
-        Document documents = Converter.convertDocxToDocument(filePath);
-        documents.setName(name);
-        Document savedDocuments = annotationRepository.save(documents);
-        return savedDocuments;
+        Document documents = null;
+        try {
+            documents = Converter.convertDocxToDocument(filePath);
+            documents.setName(name);
+            Document savedDocuments = annotationRepository.save(documents);
+            return savedDocuments;
+        } finally {
+            // delete temporary file
+            if (docxFile != null) {
+                docxFile.delete();
+            }
+        }
     }
+
     public Document uploadXml(String name, String xml) throws JAXBException {
         Document documents = Converter.convertXmlToDocument(xml);
         documents.setName(name);
@@ -77,10 +90,7 @@ public class DocumentService {
     }
     public String findDocumentAsCoNLL2003(UUID guid) {
         Optional<Document> document = annotationRepository.findByGuid(guid);
-        if (document.isPresent()) {
-            return Converter.convertDocumentToCoNLL2003(document.get());
-        }
-        return null;
+        return document.map(Converter::convertDocumentToCoNLL2003).orElse(null);
     }
     public void saveDocument(Document document) {
         annotationRepository.save(document);
