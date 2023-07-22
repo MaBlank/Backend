@@ -47,16 +47,6 @@ public class DocumentService {
         Document savedDocuments = annotationRepository.save(documents);
         return savedDocuments;
     }
-    public Document uploadCoNLL2003(String name, String conll2003) {
-        Document documents = Converter.convertCoNLL2003ToDocument(conll2003);
-        documents.setName(name);
-        Optional<Document> document = annotationRepository.findByGuid(documents.getGuid());
-        if (document.isPresent()) {
-            annotationRepository.deleteByGuid(documents.getGuid());
-        }
-        Document savedDocuments = annotationRepository.save(documents);
-        return savedDocuments;
-    }
     public void deleteAllDocuments() {
         annotationRepository.deleteAll();
     }
@@ -87,10 +77,6 @@ public class DocumentService {
             return Converter.convertDocumentToXml(document.get());
         }
         return null;
-    }
-    public String findDocumentAsCoNLL2003(UUID guid) {
-        Optional<Document> document = annotationRepository.findByGuid(guid);
-        return document.map(Converter::convertDocumentToCoNLL2003).orElse(null);
     }
     public void saveDocument(Document document) {
         annotationRepository.save(document);

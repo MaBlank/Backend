@@ -24,7 +24,6 @@ import java.util.UUID;
 @AllArgsConstructor
 public class Controller {
     private final DocumentService documentService;
-
     @PostMapping("/uploadDocx")
     public ResponseEntity<?> uploadDocx(String name, @RequestParam("file") MultipartFile file) {
         try {
@@ -35,7 +34,6 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @PostMapping("/uploadTxt")
     public ResponseEntity<String> uploadTxt(@RequestParam("name") String name, @RequestBody String json) {
         ObjectMapper mapper = new ObjectMapper();
@@ -60,15 +58,7 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @PostMapping("/uploadCoNLL2003")
-    public ResponseEntity<?> uploadCoNLL2003(String name, @RequestBody String conll2003) {
-        try {
-            Document savedDocuments = documentService.uploadCoNLL2003(name, conll2003);
-            return new ResponseEntity<>(savedDocuments, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+
     @DeleteMapping("/deleteAllDocuments")
     public ResponseEntity<Void> deleteAllDocuments() {
         try {
@@ -121,19 +111,6 @@ public class Controller {
                 return ResponseEntity.ok()
                         .headers(headers)
                         .body(resource);
-            } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-            }
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    @GetMapping(value = "/conll2003/{id}", produces = MediaType.TEXT_PLAIN_VALUE)
-    public ResponseEntity<?> getCoNLL2003(@PathVariable String id) {
-        try {
-            String conll2003 = documentService.findDocumentAsCoNLL2003(UUID.fromString(id));
-            if (conll2003 != null) {
-                return new ResponseEntity<>(conll2003, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }

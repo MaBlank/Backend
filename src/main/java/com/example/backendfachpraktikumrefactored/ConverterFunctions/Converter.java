@@ -53,38 +53,7 @@ public class Converter {
     public static Document convertTxtToDocuments(String txt) {
         return new Document(UUID.randomUUID(), "Document Name",txt, new Annotations(new ArrayList<>()));
     }
-    public static Document convertCoNLL2003ToDocument(String conll2003) {
-        String[] lines = conll2003.split("\n");
-        StringBuilder sentence = new StringBuilder();
-        List<Annotation> annotations = new ArrayList<>();
-        int currentIndex = 0;
 
-        for (String line : lines) {
-            if (line.trim().isEmpty()) {
-                continue;
-            }
-            String[] parts = line.split(" ");
-            if (parts.length < 2) {
-                sentence.append(parts[0]);
-                currentIndex += parts[0].length();
-                continue;
-            }
-            String token = parts[0];
-            String tag = parts[1];
-
-            if (sentence.length() > 0) {
-                sentence.append(" ");
-                currentIndex += 1;
-            }
-
-            sentence.append(token);
-            if (!"O".equals(tag)) {
-                annotations.add(new Annotation(currentIndex, currentIndex + token.length(),"name", tag));
-            }
-            currentIndex += token.length();
-        }
-        return new Document(UUID.randomUUID(), "Document Name",sentence.toString().trim(), new Annotations(annotations));
-    }
     public static String convertDocumentToCoNLL2003(Document document) {
         StringBuilder conll2003 = new StringBuilder();
         String[] tokens = document.getText().split("(?<=\\w)(?=[.,!?])|\\s+");
