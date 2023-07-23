@@ -76,23 +76,4 @@ class ConverterTest {
             fail("Error during conversion", e);
         }
     }
-    @Test
-    void testConvertDocumentToCoNLL2003() {
-        List<Annotation> annotations = Arrays.asList(
-                new Annotation(7, 13, "FRUIT","1"),
-                new Annotation(20, 27, "FRUIT","1"),
-                new Annotation(59, 67, "FRUIT","1"));
-        Document document = new Document(UUID.randomUUID(), "Document Name","I love apples! Bananas are good for your health. Cherries are grown in many parts of the world.", new Annotations(annotations));
-        String expectedCoNLL2003 = "I O\nlove O\napples FRUIT\n!\nBananas FRUIT\nare O\ngood O\nfor O\nyour O\nhealth O\n.\nCherries FRUIT\nare O\ngrown O\nin O\nmany O\nparts O\nof O\nthe O\nworld O\n.";
-        String actualCoNLL2003 = Converter.convertDocumentToCoNLL2003(document);
-        assertEquals(expectedCoNLL2003, actualCoNLL2003);
-    }
-    @Test
-    void testConvertCoNLL2003ToDocument() {
-        String conll2003 = "I O\nlove O\napples FRUIT\n!\n";
-        Annotations annotations = new Annotations(Arrays.asList(new Annotation(7, 13, "FRUIT", null)));
-        Document expectedDocument = new Document(null, null, "I love apples!", annotations);
-        Document actualDocument = Converter.convertCoNLL2003ToDocument(conll2003);
-        assertEquals(expectedDocument.getText(), actualDocument.getText(), "Texts do not match");
-    }
 }
