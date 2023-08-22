@@ -2,8 +2,10 @@ package com.example.backendfachpraktikumrefactored;
 import com.example.backendfachpraktikumrefactored.Model.Document;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.xml.bind.JAXBException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -23,6 +27,8 @@ import java.util.UUID;
 @CrossOrigin(origins = "http://localhost:4200")
 @AllArgsConstructor
 public class Controller {
+    @Autowired
+    private ResourceLoader resourceLoader;
     private final DocumentService documentService;
     @PostMapping("/uploadDocx")
     public ResponseEntity<?> uploadDocx(String name, @RequestParam("file") MultipartFile file) {
@@ -38,14 +44,12 @@ public class Controller {
     public ResponseEntity<String> uploadTxt(@RequestParam("name") String name, @RequestBody String json) {
         ObjectMapper mapper = new ObjectMapper();
         String text = "";
-
         try {
             Map<String, String> map = mapper.readValue(json, Map.class);
             text = map.get("txt");
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         String result = String.valueOf(documentService.uploadTxt(name, text));
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
@@ -87,6 +91,7 @@ public class Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/documents/{id}")
     public ResponseEntity<?> getDocument(@PathVariable String id) {
         try {
@@ -140,6 +145,24 @@ public class Controller {
             List<Document> allDocumentIds = documentService.getAllDocuments();
             if (!allDocumentIds.isEmpty()) {
                 return new ResponseEntity<>(allDocumentIds, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/projectsPerformance")
+    public ResponseEntity<String> getAllDocuments2() {
+        try {
+            InputStream is = getClass().getClassLoader().getResourceAsStream("LangerText.txt");
+            if (is == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            String content = new String(is.readAllBytes(), StandardCharsets.UTF_8);
+            if (!content.isEmpty()) {
+                return new ResponseEntity<>(content, HttpStatus.OK);
             } else {
                 return new ResponseEntity<>(HttpStatus.NO_CONTENT);
             }

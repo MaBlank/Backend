@@ -26,10 +26,11 @@ public class ControllerTest {
     @Test
     public void getDocumentSuccessTest() {
         Document document = new Document();
-        when(documentService.findDocumentAsJSON(any(UUID.class))).thenReturn(Optional.of(document));
-
-        ResponseEntity<?> response = documentController.getDocument("123e4567-e89b-12d3-a456-556642440000");
-
+        when(documentService
+                .findDocumentAsJSON(any(UUID.class)))
+                .thenReturn(Optional.of(document));
+        ResponseEntity<?> response = documentController
+                .getDocument("123e4567-e89b-12d3-a456-556642440000");
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(document, response.getBody());
     }

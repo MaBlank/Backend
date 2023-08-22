@@ -67,7 +67,11 @@ class ConverterTest {
                 "I love apples and oranges!\n" +
                         "Bananas and grapes are good for your health.\n" +
                         "Cherries and strawberries are grown in many parts of the world.\n";
-        Document expected = new Document(UUID.randomUUID(), "Document Name",txt, new Annotations(new ArrayList<>()));
+        Document expected = new Document(
+                UUID.randomUUID(),
+                "Document Name",
+                txt,
+                new Annotations(new ArrayList<>()));
         try {
             Document actual = convertTxtToDocuments(txt);
             assertEquals(expected.getText(), actual.getText());
