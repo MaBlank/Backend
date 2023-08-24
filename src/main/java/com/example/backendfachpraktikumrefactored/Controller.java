@@ -154,6 +154,7 @@ public class Controller {
     }
 
     @GetMapping("/projectsPerformance")
+    // Tests the Performance
     public ResponseEntity<String> getAllDocuments2() {
         try {
             InputStream is = getClass().getClassLoader().getResourceAsStream("LangerText.txt");
